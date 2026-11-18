@@ -6,6 +6,8 @@
 - 适用平台：Windows 10 / 11
 - 完全免费开源，**严禁任何形式的倒卖牟利**
 
+<img width="935" height="854" alt="image" src="https://github.com/user-attachments/assets/c9f73655-43c4-4284-9975-d64d9cea8020" />
+
 ---
 
 ## 支持的语言组合
