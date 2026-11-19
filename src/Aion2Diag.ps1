@@ -1,21 +1,25 @@
 ﻿#requires -Version 4.0
-# AION2 汉化一键诊断（只读，不修改任何游戏文件）
+# AION2 国际服简繁汉化 · 一键诊断（只读，不修改任何游戏文件）
 # 输出：同目录 AION2汉化诊断_时间.txt，把该文件发给作者即可
 #
 # 判断依据（不读取作者本机的任何状态）：
-#   1. 工具包完整性：跟脚本里写死的载荷尺寸/SHA256 比对（这两个值就是随包发布的那两个文件）
-#   2. 汉化是否装对：比对游戏里 en / en-US 的 Engine.locres 是否等于上面两个载荷
+#   1. 工具包完整性：跟脚本里写死的载荷尺寸/SHA256 比对（四份载荷随包发布）
+#   2. 汉化是否装对：比对游戏里 en / en-US / ja / ja-JP 的 Engine.locres 是否等于这四份载荷
 #   3. 游戏原始文件：只有「尺寸与基准完全相同、内容却不同」才判为被改动；
 #      尺寸不同一律视为游戏已更新，只记录、不报错（避免更新后全员误报）
-#   4. 其余为固定规则：目录能否写入、存档语言、旧方案残留、日志关键词
+#   4. 其余为固定规则：目录能否写入、游戏语言、旧方案残留、日志关键词
 $ErrorActionPreference = 'SilentlyContinue'
 $ProgressPreference = 'SilentlyContinue'
 
-$ToolName = 'AION2 英文入口汉化工具'
+$ToolName = 'AION2 国际服简繁汉化工具'
 
 # ===== 载荷基准（与 build.ps1 打包内容必须一致）=====
-$ZH = @{ Rel = 'zh\Engine.locres';    Size = 15786542; Hash = '20169D244C1FB9D578FD91278E678C9E44041FC8414A255C5253AB21F6C1568F' }
-$TW = @{ Rel = 'zh-TW\Engine.locres'; Size = 15786612; Hash = '97695A94DD5806978F64D412672B59A122ECD74123A3C5A3845411307ADB2DF8' }
+$PAYLOADS = @(
+    @{ Entry = '英文入口'; Lang = '简体中文'; Rel = 'payload\en\zh\Engine.locres';    Size = 16088441; Hash = '0AA4CB9FDE7BA08E438E9F7A229D05C6E2F9FCA5E17C9ABA17E0F854918CC559' },
+    @{ Entry = '英文入口'; Lang = '繁体中文'; Rel = 'payload\en\zh-TW\Engine.locres'; Size = 16088557; Hash = '00B46A5A9703F1A177876ECED7D4472FAB97DBE98C03EF1CFC2AE8C239CE2A8F' },
+    @{ Entry = '日文入口'; Lang = '简体中文'; Rel = 'payload\ja\zh\Engine.locres';    Size = 16088441; Hash = 'FA59CDD985953266BCDB7E53F6C21C0FD7D881120E7C5EBA4B4D521082261649' },
+    @{ Entry = '日文入口'; Lang = '繁体中文'; Rel = 'payload\ja\zh-TW\Engine.locres'; Size = 16088557; Hash = '1C9AD7F8D8EC9EBB69784745FFFC9E4864DC6825CFA391D201490C6E5C943771' }
+)
 
 # ===== 游戏原始文件基准（仅用于识别「被旧方案原地改过」，不用于判定游戏版本）=====
 # 游戏每次更新 pak 都会变，所以这里只在「尺寸相同、内容不同」时才判为被改动；
@@ -25,7 +29,7 @@ $OFFICIAL = @{
     'Aion2\Content\Paks\L10N\Text\en-US\pakchunk502000-Windows_0_P.pak' = @{ Size = 3980982;  Hash = '94F59B218B42CEC2ADD7B0275C6A105CEB3A0A3D92075A1FA621FE4DE06822B8' }
 }
 
-$LOC_CULTURES = @('en', 'en-US')
+$LOC_CULTURES = @('en', 'en-US', 'ja', 'ja-JP')
 
 $outDir = if ($PSScriptRoot) { $PSScriptRoot } else { (Get-Location).Path }
 $stamp = Get-Date -Format 'yyyyMMdd_HHmmss'
@@ -51,12 +55,16 @@ $pkgNeeded = @(
     '1-图形版-双击启动.exe',
     'Aion2CNTool.ps1',
     'Aion2Diag.ps1',
-    '2-窗口版-安装简体中文.bat',
-    '2-窗口版-安装繁体中文.bat',
-    '3-窗口版-还原官方英文.bat',
+    '2-窗口版-英文入口-简体中文.bat',
+    '2-窗口版-英文入口-繁体中文.bat',
+    '2-窗口版-日文入口-简体中文.bat',
+    '2-窗口版-日文入口-繁体中文.bat',
+    '3-窗口版-还原官方.bat',
     '0-使用说明（先看这里）.txt',
-    'zh\Engine.locres',
-    'zh-TW\Engine.locres'
+    'payload\en\zh\Engine.locres',
+    'payload\en\zh-TW\Engine.locres',
+    'payload\ja\zh\Engine.locres',
+    'payload\ja\zh-TW\Engine.locres'
 )
 
 D '【一、工具包自检】'
@@ -73,7 +81,7 @@ foreach ($rel in $pkgNeeded) {
     if ($rel -like '*.locres') { $h = Sha $p }
     D ("   " + $rel + " | " + $i.Length + " B | " + $h)
 }
-foreach ($x in @($ZH, $TW)) {
+foreach ($x in $PAYLOADS) {
     $p = Join-Path $outDir $x.Rel
     if (-not (Test-Path -LiteralPath $p)) { continue }
     $i = Get-Item -LiteralPath $p
@@ -205,8 +213,8 @@ if ($candidates.Count -eq 0) {
 # =========================================================
 function Get-ClientState($root) {
     $states = New-Object System.Collections.Generic.List[string]
-    $hasZh = $false
-    $hasTw = $false
+    $entryHit = ''
+    $langHit = ''
     $hasUnknown = $false
     $locRoot = Join-Path $root 'Engine\Content\Localization\Engine\Platforms\Windows'
     $locState = '不存在'
@@ -221,9 +229,14 @@ function Get-ClientState($root) {
         $i = Get-Item -LiteralPath $p
         $h = Sha $p
         $tag = '未知汉化文件'
-        if ($h -eq $ZH.Hash) { $tag = '本工具简体'; $hasZh = $true }
-        elseif ($h -eq $TW.Hash) { $tag = '本工具繁体'; $hasTw = $true }
-        else { $hasUnknown = $true }
+        foreach ($x in $PAYLOADS) {
+            if ($h -eq $x.Hash) {
+                $tag = '本工具' + $x.Entry + ' · ' + $x.Lang
+                $entryHit = $x.Entry
+                $langHit = $x.Lang
+            }
+        }
+        if ($tag -eq '未知汉化文件') { $hasUnknown = $true }
         D ("   " + $c + "\Engine.locres: " + $i.Length + " B | " + $h + " | " + $tag)
     }
 
@@ -298,7 +311,7 @@ function Get-ClientState($root) {
     }
 
     return [pscustomobject]@{
-        HasZh = $hasZh; HasTw = $hasTw; HasUnknown = $hasUnknown; Writable = $writable
+        Installed = ($entryHit -ne ''); Entry = $entryHit; LangText = $langHit; HasUnknown = $hasUnknown; Writable = $writable
         LocExists = (Test-Path -LiteralPath $locRoot); PakBad = $pakBad; Leftover = $leftover
         OtherCultures = $otherLoc; Culture = $culture; IniUsed = $iniUsed
     }
@@ -321,26 +334,32 @@ foreach ($c in $candidates) {
     if ($s.Culture) { $cuText = $s.Culture + '  (' + $s.IniUsed + ')' }
     D ("   存档 Culture: " + $cuText)
 
-    if ($s.HasZh -or $s.HasTw) { $installedAny = $true }
-    if ($s.HasZh -or $s.HasTw) {
-        if ($s.Culture -and $s.Culture -ne 'en-US' -and $s.Culture -ne 'en') {
-            AddProblem ('汉化文件已安装，但游戏语言被设成了 ' + $s.Culture) '把游戏内语言切回 English，或在启动器里改回英文后重启游戏' 'warn'
+    if ($s.Installed) {
+        $installedAny = $true
+        D ("   已安装: " + $s.Entry + " · " + $s.LangText)
+        $wantKey = if ($s.Entry -eq '日文入口') { 'ja' } else { 'en' }
+        if ($s.Culture -and -not $s.Culture.ToLower().StartsWith($wantKey)) {
+            $wantName = if ($wantKey -eq 'ja') { '日本語' } else { 'English' }
+            AddProblem ('汉化文件是「' + $s.Entry + '」，但游戏语言被设成了 ' + $s.Culture) ('把游戏内语言改成 ' + $wantName + ' 后完全退出游戏，再重新启动') 'warn'
         }
     }
     if ($s.PakBad.Count -gt 0) {
         AddProblem ('游戏原始文件与官方不一致：' + ($s.PakBad -join '、')) '本方案不改 pak；若装过旧日文方案请先还原，再用 Steam 验证文件完整性后重新安装' 'warn'
     }
-    if (-not $s.LocExists -and -not $s.HasZh -and -not $s.HasTw) {
+    if (-not $s.LocExists -and -not $s.Installed) {
         D '   说明: 没有 Localization 目录 = 从未安装过本汉化，属正常'
     }
     if (-not $s.Writable) {
         AddProblem ('游戏目录无法写入：' + $c.Path) '关闭杀毒软件/安全卫士后重试，或用管理员身份运行工具' 'error'
     }
     if ($s.HasUnknown) {
-        AddProblem ('游戏里装的是来路不明的汉化文件：' + $c.Path) '先点「一键还原官方英文」，再重新安装本工具' 'warn'
+        AddProblem ('游戏里装的是来路不明的汉化文件：' + $c.Path) '先点「一键还原」清掉，再重新安装本工具' 'warn'
     }
-    if ($s.Culture -and $s.Culture -ne 'en-US' -and $s.Culture -ne 'en' -and -not $s.HasZh -and -not $s.HasTw) {
-        AddProblem ('游戏语言被设成了 ' + $s.Culture + '，本方案只对英文客户端生效') '把游戏语言改回 English（本工具不支持日文/韩文入口）' 'warn'
+    if (-not $s.Installed -and $s.Culture) {
+        $cLow = $s.Culture.ToLower()
+        if ($cLow -ne 'en' -and $cLow -ne 'en-us' -and $cLow -ne 'ja' -and $cLow -ne 'ja-jp') {
+            AddProblem ('游戏语言被设成了 ' + $s.Culture + '，本工具只有英文入口与日文入口') '把游戏语言改成 English 或 日本語 之后再安装' 'warn'
+        }
     }
 }
 
@@ -376,8 +395,8 @@ if ($problems.Count -eq 0) {
         $head.Add('结论：没有找到游戏客户端。')
         $head.Add('建议：确认游戏装在哪，再用工具手动选择游戏目录。')
     } elseif (-not $installedAny) {
-        $head.Add('结论：游戏目前是官方英文，没有检测到汉化文件。')
-        $head.Add('建议：用本工具点一次「一键应用【简体中文】」或「繁体中文」，然后直接启动游戏。')
+        $head.Add('结论：游戏目前是官方原版，没有检测到汉化文件。')
+        $head.Add('建议：用本工具选好入口与文本语言后点「一键应用」，然后直接启动游戏。')
     } else {
         $head.Add('结论：一切正常，汉化文件已正确安装。')
         $head.Add('建议：直接启动游戏；如果游戏内仍是英文，请确认启动的是同一个客户端。')
