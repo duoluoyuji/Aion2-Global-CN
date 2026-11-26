@@ -1,5 +1,5 @@
 {
-  "version": "0.0.1",
-  "announcement": "v0.0.1：国际服简繁汉化首个版本，支持英文入口 / 日文入口 × 简体 / 繁体，两个入口自动互斥，一键还原官方原版。",
+  "version": "0.0.2",
+  "announcement": "v0.0.2：补齐 11-26 新增文本 209 条与服务器列表名，英文 / 日文入口 × 简体 / 繁体四份载荷全部重新生成。",
   "download": "https://github.com/duoluoyuji/Aion2-Global-CN/releases/latest"
 }
