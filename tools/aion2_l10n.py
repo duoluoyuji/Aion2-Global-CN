@@ -1,4 +1,9 @@
-"""AION2 L10NString.dat 解码 / 编码（v2 容器，语言相关掩码与密钥）"""
+"""AION2 L10NString 容器解码 / 编码（v2 容器，语言相关掩码与密钥）
+
+仅用于解码译文语料 plain_zh/tw_v3.dat（ja-JP 固定密钥，不随游戏更新轮换）。
+不要把这里的 KEYS 当成"官方 pak 密钥"。新抓官方源表不需要任何密钥，
+流程见 _内部工具\\keyhunt\\dump_mem.py + extract_map.py。
+"""
 import struct
 import blake3
 import lz4.block

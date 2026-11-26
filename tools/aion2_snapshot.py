@@ -1,6 +1,9 @@
 # -*- coding: utf-8 -*-
 """
+【旧代工具 · 仅 11-12 版可用】
 从游戏目录里的官方 en-US 包，只读提取全表（key + 英文原文），存成快照。
+本文件里的 KEY_EN / MASK_EN 是 11-12 代常量，换版本就失效；
+新版抓官方源表请用 _内部工具\\keyhunt\\dump_mem.py + extract_map.py（不需要密钥）。
 用法: python aion2_snapshot.py [pak路径]
 """
 import sys, os, json, struct, hashlib, datetime

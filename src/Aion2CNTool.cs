@@ -18,8 +18,8 @@ using Microsoft.Win32;
 [assembly: AssemblyCopyright("Copyright © 2026 B站@吃素的佩奇")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
-[assembly: AssemblyVersion("0.0.1.0")]
-[assembly: AssemblyFileVersion("0.0.1.0")]
+[assembly: AssemblyVersion("0.0.2.0")]
+[assembly: AssemblyFileVersion("0.0.2.0")]
 
 namespace Aion2CN {
     public class ClientTarget {
@@ -64,7 +64,7 @@ namespace Aion2CN {
 
         private List<ClientTarget> detectedRoots;
         private string toolDir;
-        private string currentVersion = "0.0.1";
+        private string currentVersion = "0.0.2";
         private string[] appIds = new string[] { "3393110", "4972320" };
 
         // 两个语言入口互斥：en 与 ja 的同名 locres 同时存在时，英文会按 key 回退覆盖日文，

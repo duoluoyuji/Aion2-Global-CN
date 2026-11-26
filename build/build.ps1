@@ -10,7 +10,7 @@ $ErrorActionPreference = 'Stop'
 
 $Root    = Split-Path $PSScriptRoot -Parent
 $Base    = Split-Path $Root -Parent          # 1_文本汉化包
-$Version = '0.0.1'
+$Version = '0.0.2'
 $OutName = "永恒之塔2_国际服简繁汉化_v$Version"
 $Dist    = Join-Path $Root "dist\$OutName"
 $Csc     = Join-Path $env:WINDIR 'Microsoft.NET\Framework64\v4.0.30319\csc.exe'
@@ -26,6 +26,26 @@ if (-not (Test-Path $Csc)) { throw "找不到 csc.exe: $Csc" }
 foreach ($p in @($PayEnCn, $PayEnTw, $PayJaCn, $PayJaTw)) {
     if (-not (Test-Path $p)) { throw "缺少载荷: $p" }
 }
+
+# 载荷换了就把诊断脚本里写死的尺寸/SHA256 一起同步，避免诊断误判「未知汉化文件」
+Write-Host "[1.5/5] 同步 Aion2Diag 载荷基准" -ForegroundColor Cyan
+$diagSrc = Join-Path $Root 'src\Aion2Diag.ps1'
+$diagTxt = [IO.File]::ReadAllText($diagSrc, [Text.Encoding]::UTF8)
+$payloadMap = @(
+    @{ Rel = 'payload\en\zh\Engine.locres';    File = $PayEnCn },
+    @{ Rel = 'payload\en\zh-TW\Engine.locres'; File = $PayEnTw },
+    @{ Rel = 'payload\ja\zh\Engine.locres';    File = $PayJaCn },
+    @{ Rel = 'payload\ja\zh-TW\Engine.locres'; File = $PayJaTw }
+)
+foreach ($item in $payloadMap) {
+    $size = (Get-Item -LiteralPath $item.File).Length
+    $hash = (Get-FileHash -LiteralPath $item.File -Algorithm SHA256).Hash
+    $pat = "(Rel = '" + [regex]::Escape($item.Rel) + "';[^\d]*Size = )\d+(;\s*Hash = ')[0-9A-Fa-f]{64}(')"
+    $repl = '${1}' + $size + '${2}' + $hash + '${3}'
+    $diagTxt = [regex]::Replace($diagTxt, $pat, $repl)
+    Write-Host ("  {0}  {1}  {2}" -f $item.Rel, $size, $hash.Substring(0, 16))
+}
+[IO.File]::WriteAllText($diagSrc, $diagTxt, (New-Object Text.UTF8Encoding($true)))
 
 Write-Host "[2/5] 准备输出目录" -ForegroundColor Cyan
 if (Test-Path $Dist) { Remove-Item $Dist -Recurse -Force }

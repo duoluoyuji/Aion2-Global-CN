@@ -9,7 +9,8 @@ sys.path.insert(0, HERE)
 import aion2_l10n as L
 
 SNAP_DIR = os.path.join(HERE, '_snapshots')
-PLAIN = os.path.join(HERE, r'_work_en\out\plain_zh.dat')
+# 旧代默认路径已失效；指向项目实际语料（新版请直接用 _内部工具\keyhunt\merge_new.py）
+PLAIN = os.path.normpath(os.path.join(HERE, '..', '..', r'_内部工具\_work_en\out\plain_zh_v3.dat'))
 
 def load_snap(p):
     d = json.load(open(p, encoding='utf-8'))

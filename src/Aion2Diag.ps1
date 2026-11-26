@@ -15,10 +15,10 @@ $ToolName = 'AION2 国际服简繁汉化工具'
 
 # ===== 载荷基准（与 build.ps1 打包内容必须一致）=====
 $PAYLOADS = @(
-    @{ Entry = '英文入口'; Lang = '简体中文'; Rel = 'payload\en\zh\Engine.locres';    Size = 16088441; Hash = '0AA4CB9FDE7BA08E438E9F7A229D05C6E2F9FCA5E17C9ABA17E0F854918CC559' },
-    @{ Entry = '英文入口'; Lang = '繁体中文'; Rel = 'payload\en\zh-TW\Engine.locres'; Size = 16088557; Hash = '00B46A5A9703F1A177876ECED7D4472FAB97DBE98C03EF1CFC2AE8C239CE2A8F' },
-    @{ Entry = '日文入口'; Lang = '简体中文'; Rel = 'payload\ja\zh\Engine.locres';    Size = 16088441; Hash = 'FA59CDD985953266BCDB7E53F6C21C0FD7D881120E7C5EBA4B4D521082261649' },
-    @{ Entry = '日文入口'; Lang = '繁体中文'; Rel = 'payload\ja\zh-TW\Engine.locres'; Size = 16088557; Hash = '1C9AD7F8D8EC9EBB69784745FFFC9E4864DC6825CFA391D201490C6E5C943771' }
+    @{ Entry = '英文入口'; Lang = '简体中文'; Rel = 'payload\en\zh\Engine.locres';    Size = 16105338; Hash = '598B08F7704EB902BE3221A65B76A4E9EE50A4CBB49A9D48D9909748684527A9' },
+    @{ Entry = '英文入口'; Lang = '繁体中文'; Rel = 'payload\en\zh-TW\Engine.locres'; Size = 16105454; Hash = '99DA2EFE94FE218582708986F1F50DA48B283C8F64A9559BEE9AF46253AADDA8' },
+    @{ Entry = '日文入口'; Lang = '简体中文'; Rel = 'payload\ja\zh\Engine.locres';    Size = 16105338; Hash = 'E4C22EDA745205A9FFD05B04F6434303ADDC4D8ED34D09C23E0CBB4B9FAFF40C' },
+    @{ Entry = '日文入口'; Lang = '繁体中文'; Rel = 'payload\ja\zh-TW\Engine.locres'; Size = 16105454; Hash = '80701D99D4C14BBFA23EA8AC36E16684399781F255BA25DF75FA56AACBEFC27A' }
 )
 
 # ===== 游戏原始文件基准（仅用于识别「被旧方案原地改过」，不用于判定游戏版本）=====
