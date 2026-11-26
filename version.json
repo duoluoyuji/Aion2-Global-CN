@@ -1,5 +1,5 @@
 {
-  "version": "0.0.3",
-  "announcement": "v0.0.3：修复 11-26 技改后 106 条文本仍显示英文的问题（吟游星 / 元素师 / 战士技能说明等），已按新原文重新翻译。",
+  "version": "0.0.4",
+  "announcement": "v0.0.4：补全 561 条仍显示日文/内嵌日文的文本（技能标签、任务摘要、NPC 对话、书卷、道具说明等），已全部译为中文。",
   "download": "https://github.com/duoluoyuji/Aion2-Global-CN/releases/latest"
 }
