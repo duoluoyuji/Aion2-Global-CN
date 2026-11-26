@@ -52,7 +52,7 @@ $LangName    = if ($Lang -eq 'zh') { '简体中文' } else { '繁体中文' }
 $OtherEntry  = if ($Entry -eq 'en') { 'ja' } else { 'en' }
 $AllLocresRel = @($Entries['en'].LocresRel) + @($Entries['ja'].LocresRel)
 
-$CurrentVersion = '0.0.2'
+$CurrentVersion = '0.0.3'
 # 3393110 为 Steam 正式服 AppID，4972320 为 Steam Playtest 测试服 AppID
 $AppIds         = @('3393110', '4972320')
 $RemoteVersionUrl   = 'https://raw.githubusercontent.com/duoluoyuji/Aion2-Global-CN/main/version.json'
