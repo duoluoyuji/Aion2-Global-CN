@@ -1,5 +1,5 @@
 {
-  "version": "0.0.2",
-  "announcement": "v0.0.2：补齐 11-26 新增文本 209 条与服务器列表名，英文 / 日文入口 × 简体 / 繁体四份载荷全部重新生成。",
+  "version": "0.0.3",
+  "announcement": "v0.0.3：修复 11-26 技改后 106 条文本仍显示英文的问题（吟游星 / 元素师 / 战士技能说明等），已按新原文重新翻译。",
   "download": "https://github.com/duoluoyuji/Aion2-Global-CN/releases/latest"
 }
